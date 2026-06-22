@@ -1,0 +1,17 @@
+# Enruta todas las peticiones al front controller (index.php)
+# salvo que el archivo o carpeta exista físicamente (ej: /uploads/foto.jpg)
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Permitir acceso directo a archivos/carpetas reales (uploads, etc.)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Todo lo demás va a index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# Seguridad básica: no listar directorios
+Options -Indexes
