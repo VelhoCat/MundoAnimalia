@@ -4,6 +4,7 @@ import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import ProtectedRoute from '@/lib/ProtectedRoute';
 
 import AppLayout from './components/layout/AppLayout';
 import Home from './pages/Home';
@@ -14,6 +15,8 @@ import About from './pages/About';
 import CareInfo from './pages/CareInfo';
 import AdminDashboard from './pages/AdminDashboard';
 import Noticias from './pages/Noticias';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings } = useAuth();
@@ -32,11 +35,27 @@ const AuthenticatedApp = () => {
         <Route path="/" element={<Home />} />
         <Route path="/catalogo" element={<Catalog />} />
         <Route path="/animal/:id" element={<AnimalDetail />} />
-        <Route path="/publicar" element={<PublishAnimal />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Register />} />
+        <Route
+          path="/publicar"
+          element={
+            <ProtectedRoute roles={['admin', 'voluntario']}>
+              <PublishAnimal />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/acerca" element={<About />} />
         <Route path="/cuidados" element={<CareInfo />} />
         <Route path="/noticias" element={<Noticias />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute roles={['admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Routes>

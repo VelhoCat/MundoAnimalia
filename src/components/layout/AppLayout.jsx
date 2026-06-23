@@ -1,30 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { useAuth } from '@/lib/AuthContext';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 export default function AppLayout() {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const isAuth = await base44.auth.isAuthenticated();
-      if (isAuth) {
-        const me = await base44.auth.me();
-        setUser(me);
-      }
-    };
-    loadUser();
-  }, []);
-
-  const handleLogout = () => {
-    setUser(null);
-  };
+  // El usuario y el logout vienen del contexto global de autenticación,
+  // así las pestañas (Admin/Publicar) y el flujo de adopción reaccionan
+  // automáticamente al iniciar o cerrar sesión.
+  const { user, logout } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col font-body">
-      <Navbar user={user} onLogout={handleLogout} />
+      <Navbar user={user} onLogout={logout} />
       <main className="flex-1">
         <Outlet context={{ user }} />
       </main>

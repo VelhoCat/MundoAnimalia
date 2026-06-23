@@ -24,7 +24,10 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingAuth(false);
       setAuthChecked(true);
     } catch (error) {
-      console.error('Auth check failed:', error);
+      // 401 es normal cuando nadie ha iniciado sesión; solo registramos otros errores.
+      if (error?.status && error.status !== 401) {
+        console.error('Auth check failed:', error);
+      }
       setIsLoadingAuth(false);
       setIsAuthenticated(false);
       setAuthChecked(true);
@@ -41,6 +44,20 @@ export const AuthProvider = ({ children }) => {
       return loggedUser;
     } catch (error) {
       setAuthError(error.message || 'No se pudo iniciar sesión.');
+      throw error;
+    }
+  };
+
+  // Registra una cuenta nueva (rol adoptante) e inicia sesión automáticamente
+  const register = async (fullName, email, password) => {
+    setAuthError(null);
+    try {
+      const newUser = await base44.auth.register({ full_name: fullName, email, password });
+      setUser(newUser);
+      setIsAuthenticated(true);
+      return newUser;
+    } catch (error) {
+      setAuthError(error.message || 'No se pudo crear la cuenta.');
       throw error;
     }
   };
@@ -68,6 +85,7 @@ export const AuthProvider = ({ children }) => {
       authError,
       authChecked,
       login,
+      register,
       logout,
       navigateToLogin,
       checkUserAuth: checkAppState,

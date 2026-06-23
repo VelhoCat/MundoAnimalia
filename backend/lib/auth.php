@@ -76,18 +76,17 @@ function handle_logout() {
     json_response(['success' => true]);
 }
 
-// POST /auth/register  { full_name, email, password, role? }
+// POST /auth/register  { full_name, email, password }
 function handle_register() {
     start_session();
     $body = read_json_body();
     $name = trim($body['full_name'] ?? '');
     $email = trim($body['email'] ?? '');
     $password = $body['password'] ?? '';
-    $role = $body['role'] ?? 'adoptante';
 
-    if (!in_array($role, ['admin','voluntario','adoptante'], true)) {
-        $role = 'adoptante';
-    }
+    // Seguridad: el registro público SIEMPRE crea cuentas "adoptante".
+    // El rol no se acepta desde el cliente para que nadie se auto-asigne admin.
+    $role = 'adoptante';
     if ($name === '' || $email === '' || strlen($password) < 6) {
         json_response(['error' => 'Nombre, email y contraseña (mín. 6 caracteres) son obligatorios.'], 400);
     }

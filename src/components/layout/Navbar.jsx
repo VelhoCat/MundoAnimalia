@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, X, PawPrint, Sun, Moon, LogOut, User, Shield } from 'lucide-react';
+import { Menu, X, PawPrint, Sun, Moon, LogOut, LogIn, User, Shield } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -128,6 +128,12 @@ export default function Navbar({ user, onLogout }) {
               </DropdownMenu> :
 
             <div className="hidden md:flex items-center gap-2">
+                <Link to="/login">
+                  <Button variant="ghost" className="font-body text-sm rounded-full text-muted-foreground hover:text-foreground">
+                    <LogIn className="w-4 h-4 mr-1" />
+                    Iniciar sesión
+                  </Button>
+                </Link>
                 <Link to="/catalogo">
                   <Button className="bg-primary hover:bg-primary/90 font-body text-sm rounded-full px-6">
                     Ver Animales
@@ -174,9 +180,17 @@ export default function Navbar({ user, onLogout }) {
                         Cerrar sesión
                       </Button> :
 
-                    <Link to="/catalogo" onClick={() => setOpen(false)}>
-                        <Button className="w-full bg-primary">Ver Animales</Button>
-                      </Link>
+                    <div className="flex flex-col gap-2">
+                        <Link to="/login" onClick={() => setOpen(false)}>
+                          <Button variant="outline" className="w-full">
+                            <LogIn className="w-4 h-4 mr-2" />
+                            Iniciar sesión
+                          </Button>
+                        </Link>
+                        <Link to="/catalogo" onClick={() => setOpen(false)}>
+                          <Button className="w-full bg-primary">Ver Animales</Button>
+                        </Link>
+                      </div>
                     }
                   </div>
                 </div>
