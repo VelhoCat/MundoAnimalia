@@ -11,7 +11,7 @@ export default function Catalog() {
     especie: '', edad_estimada: '', tamano: '', ubicacion: '', estado_adopcion: '', search: ''
   });
 
-  const { data: animals, isLoading } = useQuery({
+  const { data: animals, isLoading, isError } = useQuery({
     queryKey: ['animals'],
     queryFn: () => base44.entities.Animal.list('-created_date'),
     initialData: [],
@@ -60,7 +60,17 @@ export default function Catalog() {
             {filtered.length} {filtered.length === 1 ? 'animal encontrado' : 'animales encontrados'}
           </p>
         )}
-
+        {/* Error de carga */}
+        {isError && (
+          <div className="text-center py-10">
+            <h3 className="font-heading font-semibold text-xl mb-2">
+              No se pudo cargar el catálogo
+            </h3>
+            <p className="text-muted-foreground">
+              Ocurrió un error al obtener los animales. Intenta nuevamente más tarde.
+            </p>
+          </div>
+        )}
         {/* Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {isLoading
