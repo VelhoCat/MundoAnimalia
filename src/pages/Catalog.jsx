@@ -4,14 +4,14 @@ import { base44 } from '@/api/base44Client';
 import AnimalCard from '../components/animals/AnimalCard';
 import AnimalCardSkeleton from '../components/animals/AnimalCardSkeleton';
 import AnimalFilters from '../components/animals/AnimalFilters';
-import { PawPrint } from 'lucide-react';
+import { PawPrint, AlertTriangle, RotateCw } from 'lucide-react';
 
 export default function Catalog() {
   const [filters, setFilters] = useState({
     especie: '', edad_estimada: '', tamano: '', ubicacion: '', estado_adopcion: '', search: ''
   });
 
-  const { data: animals, isLoading } = useQuery({
+  const { data: animals, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ['animals'],
     queryFn: () => base44.entities.Animal.list('-created_date'),
     initialData: [],
@@ -54,24 +54,45 @@ export default function Catalog() {
           <AnimalFilters filters={filters} setFilters={setFilters} />
         </div>
 
+        {/* Error state */}
+        {isError && (
+          <div className="text-center py-20">
+            <AlertTriangle className="w-16 h-16 text-destructive/40 mx-auto mb-4" />
+            <h3 className="font-heading font-semibold text-xl mb-2">No pudimos cargar los animales</h3>
+            <p className="text-muted-foreground mb-6">
+              Ocurrió un problema al obtener el catálogo. Revisa tu conexión e inténtalo de nuevo.
+            </p>
+            <button
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
+            >
+              <RotateCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+              {isFetching ? 'Reintentando...' : 'Reintentar'}
+            </button>
+          </div>
+        )}
+
         {/* Results count */}
-        {!isLoading && (
+        {!isLoading && !isError && (
           <p className="text-sm text-muted-foreground mb-6">
             {filtered.length} {filtered.length === 1 ? 'animal encontrado' : 'animales encontrados'}
           </p>
         )}
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {isLoading
-            ? Array(8).fill(0).map((_, i) => <AnimalCardSkeleton key={i} />)
-            : filtered.map((animal, i) => (
-                <AnimalCard key={animal.id} animal={animal} index={i} />
-              ))
-          }
-        </div>
+        {!isError && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {isLoading
+              ? Array(8).fill(0).map((_, i) => <AnimalCardSkeleton key={i} />)
+              : filtered.map((animal, i) => (
+                  <AnimalCard key={animal.id} animal={animal} index={i} />
+                ))
+            }
+          </div>
+        )}
 
-        {!isLoading && filtered.length === 0 && (
+        {!isLoading && !isError && filtered.length === 0 && (
           <div className="text-center py-20">
             <PawPrint className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
             <h3 className="font-heading font-semibold text-xl mb-2">No se encontraron animales</h3>
