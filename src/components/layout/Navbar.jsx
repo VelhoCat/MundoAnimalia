@@ -120,6 +120,13 @@ export default function Navbar({ user, onLogout }) {
                     <p className="text-xs text-muted-foreground capitalize">{user.role || 'adoptante'}</p>
                   </div>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/perfil">
+                      <User className="w-4 h-4 mr-2" />
+                      Mi perfil
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={onLogout} className="text-destructive">
                     <LogOut className="w-4 h-4 mr-2" />
                     Cerrar sesión
@@ -175,10 +182,18 @@ export default function Navbar({ user, onLogout }) {
                   }
                   <div className="border-t pt-4">
                     {user ?
-                    <Button variant="outline" className="w-full" onClick={() => {onLogout();setOpen(false);}}>
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Cerrar sesión
-                      </Button> :
+                    <div className="flex flex-col gap-2">
+                        <Link to="/perfil" onClick={() => setOpen(false)}>
+                          <Button variant="ghost" className="w-full justify-start">
+                            <User className="w-4 h-4 mr-2" />
+                            Mi perfil
+                          </Button>
+                        </Link>
+                        <Button variant="outline" className="w-full" onClick={() => {onLogout();setOpen(false);}}>
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Cerrar sesión
+                        </Button>
+                      </div> :
 
                     <div className="flex flex-col gap-2">
                         <Link to="/login" onClick={() => setOpen(false)}>

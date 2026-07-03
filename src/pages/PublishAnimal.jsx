@@ -71,7 +71,8 @@ export default function PublishAnimal() {
       await base44.entities.Animal.update(editId, form);
       toast({ title: 'Animal actualizado', description: `${form.nombre} ha sido actualizado exitosamente.` });
     } else {
-      await base44.entities.Animal.create(form);
+      // Registrar quién publica el animal (identificador = email/usuario)
+      await base44.entities.Animal.create({ ...form, publicado_por: user.email });
       toast({ title: '¡Animal publicado!', description: `${form.nombre} ya está visible en el catálogo.` });
     }
     queryClient.invalidateQueries({ queryKey: ['animals'] });

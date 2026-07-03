@@ -17,6 +17,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Noticias from './pages/Noticias';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings } = useAuth();
@@ -37,6 +38,14 @@ const AuthenticatedApp = () => {
         <Route path="/animal/:id" element={<AnimalDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
+        <Route
+          path="/perfil"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/publicar"
           element={

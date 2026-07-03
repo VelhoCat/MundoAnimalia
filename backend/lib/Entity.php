@@ -161,7 +161,7 @@ function entity_registry() {
             'animals',
             ['nombre','descripcion','especie','raza','edad_estimada','tamano','sexo',
              'estado_salud','vacunas','esterilizado','chip','foto_url','fotos_adicionales',
-             'ubicacion','estado_adopcion','etiquetas','destacado'],
+             'ubicacion','estado_adopcion','etiquetas','destacado','publicado_por'],
             ['vacunas','esterilizado','chip','destacado'],
             ['fotos_adicionales','etiquetas']
         ),

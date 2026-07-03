@@ -54,11 +54,13 @@ CREATE TABLE animals (
   estado_adopcion  VARCHAR(40) NOT NULL DEFAULT 'disponible',
   etiquetas        JSON,
   destacado        TINYINT(1) NOT NULL DEFAULT 0,
+  publicado_por    VARCHAR(190),
   created_date     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_especie (especie),
   INDEX idx_estado_adopcion (estado_adopcion),
   INDEX idx_ubicacion (ubicacion),
-  INDEX idx_destacado (destacado)
+  INDEX idx_destacado (destacado),
+  INDEX idx_publicado_por (publicado_por)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ------------------------------------------------------------
