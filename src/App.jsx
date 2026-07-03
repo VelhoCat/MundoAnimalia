@@ -1,19 +1,22 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
+import { Toaster } from "@/components/ui/toaster";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClientInstance } from "@/lib/query-client";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import AppLayout from './components/layout/AppLayout';
-import Home from './pages/Home';
-import Catalog from './pages/Catalog';
-import AnimalDetail from './pages/AnimalDetail';
-import PublishAnimal from './pages/PublishAnimal';
-import About from './pages/About';
-import CareInfo from './pages/CareInfo';
-import AdminDashboard from './pages/AdminDashboard';
-import Noticias from './pages/Noticias';
+import PageNotFound from "./lib/PageNotFound";
+import { AuthProvider, useAuth } from "@/lib/AuthContext";
+
+import AppLayout from "./components/layout/AppLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import Home from "./pages/Home";
+import Catalog from "./pages/Catalog";
+import AnimalDetail from "./pages/AnimalDetail";
+import PublishAnimal from "./pages/PublishAnimal";
+import About from "./pages/About";
+import CareInfo from "./pages/CareInfo";
+import AdminDashboard from "./pages/AdminDashboard";
+import Noticias from "./pages/Noticias";
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings } = useAuth();
@@ -36,7 +39,17 @@ const AuthenticatedApp = () => {
         <Route path="/acerca" element={<About />} />
         <Route path="/cuidados" element={<CareInfo />} />
         <Route path="/noticias" element={<Noticias />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+
+        {/* SOLO ADMIN */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="*" element={<PageNotFound />} />
       </Route>
     </Routes>
@@ -53,7 +66,7 @@ function App() {
         <Toaster />
       </QueryClientProvider>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

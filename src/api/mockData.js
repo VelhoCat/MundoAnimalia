@@ -321,7 +321,20 @@ export const base44 = {
   },
   auth: {
     isAuthenticated: () => Promise.resolve(true),
-    me: () => Promise.resolve(store.User[0]), // Returns admin user by default
+    me: () => {
+      // Simula usuario actual (puedes cambiarlo manualmente si quieres testear otros)
+      const currentUser = store.User[0];
+
+      if (!currentUser) return Promise.resolve(null);
+
+      const isAdmin =
+        currentUser.email === "benjamin.tamarin.lara@alumnos.uta.cl";
+
+      return Promise.resolve({
+        ...currentUser,
+        role: isAdmin ? "admin" : currentUser.role || "adoptante",
+      });
+    },
     logout: (redirectUrl) => {
       if (redirectUrl) window.location.href = redirectUrl;
     },
