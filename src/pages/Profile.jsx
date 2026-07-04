@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
 import { PawPrint, Pencil, Trash2, Plus, User as UserIcon, Loader2 } from 'lucide-react';
+import UserStars from '@/components/social/UserStars';
 
 const estadoLabels = {
   disponible: { label: 'Disponible', className: 'bg-primary text-primary-foreground' },
@@ -30,6 +31,13 @@ export default function Profile() {
         ? base44.entities.Animal.list('-created_date')
         : base44.entities.Animal.filter({ publicado_por: user.email }, '-created_date'),
     initialData: [],
+    enabled: !!user,
+  });
+
+  // Estadísticas y estrellas del usuario
+  const { data: stats } = useQuery({
+    queryKey: ['user-stats', user?.email],
+    queryFn: () => base44.social.userStats(user.email),
     enabled: !!user,
   });
 
@@ -67,6 +75,24 @@ export default function Profile() {
             <div className="flex items-center gap-2 mt-1 text-muted-foreground text-sm">
               <span>{user.email}</span>
               <Badge variant="outline" className="capitalize">{user.role || 'adoptante'}</Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Nivel del usuario (estrellas) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <p className="text-sm text-muted-foreground mb-2">Animales dados en adopción</p>
+            <div className="flex items-center justify-between">
+              <UserStars stars={stats?.given_stars || 0} size={18} />
+              <span className="font-heading font-bold text-2xl">{stats?.given_count ?? 0}</span>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <p className="text-sm text-muted-foreground mb-2">Animales adoptados</p>
+            <div className="flex items-center justify-between">
+              <UserStars stars={stats?.adopted_stars || 0} size={18} />
+              <span className="font-heading font-bold text-2xl">{stats?.adopted_count ?? 0}</span>
             </div>
           </div>
         </div>

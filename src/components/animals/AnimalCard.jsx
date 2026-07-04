@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Heart, Clock } from 'lucide-react';
+import { MapPin, Heart, Clock, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const edadLabels = { cachorro: 'Cachorro', joven: 'Joven', adulto: 'Adulto', senior: 'Senior' };
@@ -86,6 +86,16 @@ export default function AnimalCard({ animal, index = 0 }) {
                 {animal.esterilizado && <span className="text-xs" title="Esterilizado/a">✂️</span>}
                 {animal.chip && <span className="text-xs" title="Con microchip">📡</span>}
               </div>
+            </div>
+
+            {/* Contadores sociales */}
+            <div className="flex items-center gap-4 pt-2 mt-1 border-t border-border/40 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1" title="Me gusta">
+                <Heart className="w-3.5 h-3.5" /> {animal.likes_count || 0}
+              </span>
+              <span className="flex items-center gap-1" title="Comentarios">
+                <MessageCircle className="w-3.5 h-3.5" /> {animal.comments_count || 0}
+              </span>
             </div>
           </div>
         </div>

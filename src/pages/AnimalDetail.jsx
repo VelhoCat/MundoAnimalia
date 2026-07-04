@@ -6,8 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ArrowLeft, MapPin, Heart, Check, X, Syringe, Scissors, Radio } from 'lucide-react';
+import { ArrowLeft, MapPin, Heart, Check, X, Syringe, Scissors, Radio, MessageCircle } from 'lucide-react';
 import AdoptionForm from '../components/adoption/AdoptionForm';
+import LikeButton from '../components/social/LikeButton';
+import CommentsSection from '../components/social/CommentsSection';
+import UserStars from '../components/social/UserStars';
 
 const edadLabels = { cachorro: 'Cachorro', joven: 'Joven', adulto: 'Adulto', senior: 'Senior' };
 const tamanoLabels = { pequeño: 'Pequeño', mediano: 'Mediano', grande: 'Grande' };
@@ -27,6 +30,13 @@ export default function AnimalDetail() {
   });
 
   const animal = animals[0];
+
+  // Estrellas del usuario que publicó (rescatista)
+  const { data: pubStats } = useQuery({
+    queryKey: ['user-stats', animal?.publicado_por],
+    queryFn: () => base44.social.userStats(animal.publicado_por),
+    enabled: !!animal?.publicado_por,
+  });
 
   if (isLoading) {
     return (
@@ -148,6 +158,33 @@ export default function AnimalDetail() {
               </div>
             )}
 
+            {/* Acciones sociales */}
+            <div className="flex items-center gap-3 pt-1">
+              <LikeButton
+                animalId={animal.id}
+                initialCount={animal.likes_count || 0}
+                initialLiked={!!animal.liked}
+                user={user}
+              />
+              <a
+                href="#comentarios"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-muted-foreground hover:bg-muted text-sm transition-colors"
+              >
+                <MessageCircle className="w-5 h-5" />
+                <span className="font-medium">{animal.comments_count || 0}</span>
+              </a>
+            </div>
+
+            {/* Publicado por (con estrellas de rescatista) */}
+            {animal.publicado_por && (
+              <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                <span>Publicado por <span className="font-medium text-foreground">{animal.publicado_por}</span></span>
+                {pubStats && pubStats.given_stars > 0 && (
+                  <UserStars stars={pubStats.given_stars} size={14} label="rescatista" />
+                )}
+              </div>
+            )}
+
             {/* Adopt button */}
             {animal.estado_adopcion === 'disponible' && (
               <Dialog open={adoptOpen} onOpenChange={setAdoptOpen}>
@@ -178,6 +215,10 @@ export default function AnimalDetail() {
               </Dialog>
             )}
           </div>
+        </div>
+
+        <div id="comentarios">
+          <CommentsSection animalId={animal.id} user={user} />
         </div>
       </div>
     </div>

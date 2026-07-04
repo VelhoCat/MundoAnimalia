@@ -117,6 +117,28 @@ export const base44 = {
       },
     },
   },
+  // --- Funciones sociales (me gusta, comentarios, notificaciones, estrellas) ---
+  social: {
+    likes: {
+      get: (animalId) => request(`/animals/${animalId}/likes`),
+      toggle: (animalId) => request(`/animals/${animalId}/likes`, { method: 'POST' }),
+    },
+    comments: {
+      list: (animalId) => request(`/animals/${animalId}/comments`),
+      create: (animalId, texto) =>
+        request(`/animals/${animalId}/comments`, { method: 'POST', body: { texto } }),
+      update: (commentId, texto) =>
+        request(`/comments/${commentId}`, { method: 'PUT', body: { texto } }),
+      delete: (commentId) => request(`/comments/${commentId}`, { method: 'DELETE' }),
+    },
+    notifications: {
+      list: () => request('/notifications'),
+      markAllRead: () => request('/notifications/read', { method: 'POST' }),
+      markRead: (id) => request(`/notifications/${id}/read`, { method: 'POST' }),
+    },
+    userStats: (email) =>
+      request(`/user-stats${email ? `?email=${encodeURIComponent(email)}` : ''}`),
+  },
 };
 
 export default base44;

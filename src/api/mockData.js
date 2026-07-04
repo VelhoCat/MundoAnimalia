@@ -339,4 +339,59 @@ export const base44 = {
       },
     },
   },
+  // --- Stub social en memoria (modo mock) ---
+  social: (() => {
+    const likesStore = {};   // animalId -> Set(email)
+    const commentsStore = {}; // animalId -> [comments]
+    let cId = 1000;
+    const me = () => store.User[0];
+    return {
+      likes: {
+        get: (animalId) => Promise.resolve({
+          count: (likesStore[animalId]?.size) || 0,
+          liked: !!likesStore[animalId]?.has(me().email),
+        }),
+        toggle: (animalId) => {
+          likesStore[animalId] = likesStore[animalId] || new Set();
+          const s = likesStore[animalId];
+          const email = me().email;
+          if (s.has(email)) s.delete(email); else s.add(email);
+          return Promise.resolve({ count: s.size, liked: s.has(email) });
+        },
+      },
+      comments: {
+        list: (animalId) => Promise.resolve([...(commentsStore[animalId] || [])].reverse()),
+        create: (animalId, texto) => {
+          commentsStore[animalId] = commentsStore[animalId] || [];
+          const c = {
+            id: String(cId++), animal_id: String(animalId), user_email: me().email,
+            autor_nombre: me().full_name, texto, created_date: new Date().toISOString(),
+          };
+          commentsStore[animalId].push(c);
+          return Promise.resolve(c);
+        },
+        update: (commentId, texto) => {
+          for (const list of Object.values(commentsStore)) {
+            const c = list.find(x => x.id === String(commentId));
+            if (c) { c.texto = texto; return Promise.resolve(c); }
+          }
+          return Promise.resolve(null);
+        },
+        delete: (commentId) => {
+          for (const k of Object.keys(commentsStore)) {
+            commentsStore[k] = commentsStore[k].filter(x => x.id !== String(commentId));
+          }
+          return Promise.resolve({ success: true });
+        },
+      },
+      notifications: {
+        list: () => Promise.resolve({ items: [], unread: 0 }),
+        markAllRead: () => Promise.resolve({ success: true }),
+        markRead: () => Promise.resolve({ success: true }),
+      },
+      userStats: () => Promise.resolve({
+        given_count: 0, adopted_count: 0, given_stars: 0, adopted_stars: 0,
+      }),
+    };
+  })(),
 };

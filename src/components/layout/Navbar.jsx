@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger } from
 '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import NotificationsBell from './NotificationsBell';
 
 export default function Navbar({ user, onLogout }) {
   const [scrolled, setScrolled] = useState(false);
@@ -102,6 +103,8 @@ export default function Navbar({ user, onLogout }) {
             <Button variant="ghost" size="icon" onClick={toggleDark} className="text-muted-foreground">
               {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
+
+            {user && <NotificationsBell user={user} />}
 
             {user ?
             <DropdownMenu>
