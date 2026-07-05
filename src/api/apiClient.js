@@ -11,6 +11,7 @@ const RESOURCE = {
   Animal: 'animals',
   AdoptionRequest: 'adoption-requests',
   User: 'users',
+  Noticia: 'noticias',
 };
 
 // Wrapper fetch con manejo de errores y cookies de sesión
@@ -83,6 +84,7 @@ export const base44 = {
     Animal: createEntityApi('Animal'),
     AdoptionRequest: createEntityApi('AdoptionRequest'),
     User: createEntityApi('User'),
+    Noticia: createEntityApi('Noticia'),
   },
   auth: {
     isAuthenticated: async () => {

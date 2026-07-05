@@ -31,15 +31,27 @@ páginas de React no necesitan cambios.
 
 ## 3. Crear la base de datos
 
+Todo se importa con **un solo archivo**: `backend/database/install.sql`.
+
 1. Abre **phpMyAdmin**: http://localhost/phpmyadmin
 2. Ve a la pestaña **Importar**.
-3. Selecciona el archivo `backend/database/schema.sql` y pulsa **Continuar**.
-   Esto crea la base `mundo_animalia` con sus tablas y datos de ejemplo.
+3. Selecciona el archivo `backend/database/install.sql` y pulsa **Continuar**.
+
+Ese único archivo crea la base `mundo_animalia` con **todo**: tablas base y datos de
+ejemplo, funciones sociales (me gusta, comentarios, notificaciones), noticias y las
+cuentas de administrador.
+
+> No necesitas borrar la base vieja antes: `install.sql` la deja limpia
+> automáticamente (elimina las tablas y las vuelve a crear).
 
 > Alternativa por consola:
 > ```
-> C:\xampp\mysql\bin\mysql -u root < backend\database\schema.sql
+> C:\xampp\mysql\bin\mysql -u root < backend\database\install.sql
 > ```
+
+> Los archivos sueltos (`schema.sql`, `seed_admins.sql`, `add_social_features.sql`,
+> `add_noticias.sql`) se conservan como historial de migraciones; para una instalación
+> nueva basta con `install.sql`.
 
 ### Credenciales de prueba (sembradas)
 
@@ -100,6 +112,7 @@ Base: `…/backend`
 | DELETE | `/animals/{id}`              | Eliminar                                      |
 | GET/POST/PUT/DELETE | `/adoption-requests[/{id}]` | Solicitudes de adopción          |
 | GET/POST/PUT/DELETE | `/users[/{id}]`     | Usuarios                                      |
+| GET/POST/PUT/DELETE | `/noticias[/{id}]`  | Noticias (crear/editar/eliminar: solo admin) |
 | POST   | `/auth/login`                | `{ email, password }` → inicia sesión        |
 | POST   | `/auth/register`             | `{ full_name, email, password, role? }`      |
 | GET    | `/auth/me`                   | Usuario de la sesión actual (401 si no hay)  |
@@ -120,7 +133,11 @@ backend/
 ├── config.php           # Credenciales de BD, CORS, uploads
 ├── .htaccess            # Reescritura de rutas a index.php
 ├── database/
-│   └── schema.sql       # Esquema + datos de ejemplo
+│   ├── install.sql            # Instalador completo (todo en uno) ← usar este
+│   ├── schema.sql             # Esquema + datos de ejemplo (base)
+│   ├── seed_admins.sql        # Cuentas de administrador
+│   ├── add_social_features.sql# Tablas de me gusta, comentarios y notificaciones
+│   └── add_noticias.sql       # Tabla de noticias
 ├── lib/
 │   ├── db.php           # Conexión PDO
 │   ├── helpers.php      # CORS, respuestas JSON, normalización

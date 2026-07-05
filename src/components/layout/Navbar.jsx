@@ -33,7 +33,6 @@ export default function Navbar({ user, onLogout }) {
   const navLinks = [
   { to: '/catalogo', label: 'Adoptar' },
   { to: '/noticias', label: 'Noticias' },
-  { to: '/cuidados', label: 'Cuidados' },
   { to: '/acerca', label: 'Nosotros' }];
 
 

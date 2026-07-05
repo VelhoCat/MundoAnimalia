@@ -25,7 +25,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {[
                 { to: '/catalogo', label: 'Adoptar' },
-                { to: '/cuidados', label: 'Cuidados' },
+                { to: '/noticias', label: 'Noticias' },
                 { to: '/acerca', label: 'Nosotros' },
               ].map(link => (
                 <li key={link.to}>
@@ -40,12 +40,14 @@ export default function Footer() {
           {/* Cuidados */}
           <div>
             <h4 className="font-heading font-semibold mb-4">Cuidado Animal</h4>
+            <p className="text-sm opacity-70 leading-relaxed mb-3">
+              Cada mascota recibe una guía de cuidados personalizada según su raza y edad
+              al momento de adoptarla.
+            </p>
             <ul className="space-y-2">
               {['Alimentación', 'Higiene', 'Salud', 'Esterilización', 'Vacunación'].map(item => (
-                <li key={item}>
-                  <Link to="/cuidados" className="text-sm opacity-70 hover:opacity-100 transition-opacity">
-                    {item}
-                  </Link>
+                <li key={item} className="text-sm opacity-70">
+                  {item}
                 </li>
               ))}
             </ul>

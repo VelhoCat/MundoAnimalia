@@ -90,6 +90,14 @@ if (isset($registry[$name])) {
         require_animal_edit_permission($id);
     }
 
+    // Permisos: crear/editar/eliminar noticias solo administradores.
+    if ($name === 'noticias' && in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'], true)) {
+        $current = current_user();
+        if (!$current || ($current['role'] ?? '') !== 'admin') {
+            json_response(['error' => 'Solo administradores pueden gestionar noticias.'], 403);
+        }
+    }
+
     switch ($method) {
         case 'GET':
             if ($id !== null) {

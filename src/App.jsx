@@ -12,7 +12,6 @@ import Catalog from './pages/Catalog';
 import AnimalDetail from './pages/AnimalDetail';
 import PublishAnimal from './pages/PublishAnimal';
 import About from './pages/About';
-import CareInfo from './pages/CareInfo';
 import AdminDashboard from './pages/AdminDashboard';
 import Noticias from './pages/Noticias';
 import Login from './pages/Login';
@@ -55,7 +54,6 @@ const AuthenticatedApp = () => {
           }
         />
         <Route path="/acerca" element={<About />} />
-        <Route path="/cuidados" element={<CareInfo />} />
         <Route path="/noticias" element={<Noticias />} />
         <Route
           path="/admin"

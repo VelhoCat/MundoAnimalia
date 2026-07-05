@@ -179,6 +179,12 @@ function entity_registry() {
             [],
             []
         ),
+        'noticias' => new Entity(
+            'noticias',
+            ['titulo','resumen','contenido','categoria','imagen','ubicacion','publicado_por'],
+            [],
+            []
+        ),
     ];
 
     return $registry;

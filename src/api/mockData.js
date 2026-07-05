@@ -242,11 +242,75 @@ export const mockUsers = [
   },
 ];
 
+export const mockNoticias = [
+  {
+    id: '1',
+    titulo: 'Gran jornada de adopción en Plaza Colón',
+    resumen: 'Este sábado 22 de marzo se realizará una feria de adopción masiva en la Plaza Colón de Arica. Habrá más de 30 animales esperando por un hogar, atención veterinaria gratuita y charlas sobre tenencia responsable.',
+    contenido: 'Este sábado 22 de marzo, desde las 10:00 hasta las 18:00 horas, la Plaza Colón de Arica se llenará de patas y colas en busca de un hogar. Más de 30 perros y gatos rescatados estarán disponibles para adopción responsable, todos vacunados, desparasitados y con revisión veterinaria al día.\n\nDurante la jornada habrá atención veterinaria gratuita para las mascotas de la comunidad, además de charlas sobre tenencia responsable, alimentación y cuidados básicos.\n\nInvitamos a toda la comunidad a participar. Recuerda: adoptar es un compromiso de amor para toda la vida.',
+    categoria: 'Evento',
+    imagen: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=600&h=400&fit=crop',
+    ubicacion: 'Arica',
+    created_date: '2025-03-18T10:00:00Z',
+  },
+  {
+    id: '2',
+    titulo: 'Campaña de esterilización gratuita en Putre',
+    resumen: 'En conjunto con la Municipalidad de Putre, Mundo Animalia llevará a cabo una campaña de esterilización gratuita para perros y gatos durante el mes de abril. Los cupos son limitados.',
+    contenido: 'En conjunto con la Municipalidad de Putre, Mundo Animalia llevará a cabo una campaña de esterilización gratuita para perros y gatos durante todo el mes de abril. La esterilización es la forma más efectiva y humanitaria de controlar la sobrepoblación animal y prevenir el abandono.\n\nLos cupos son limitados y se asignarán por orden de inscripción. Para reservar, los vecinos pueden acercarse a las oficinas municipales o escribirnos a través de nuestras redes sociales.',
+    categoria: 'Campaña',
+    imagen: 'https://images.unsplash.com/photo-1612531386530-97d3f29d5173?w=600&h=400&fit=crop',
+    ubicacion: 'Putre',
+    created_date: '2025-03-12T10:00:00Z',
+  },
+  {
+    id: '3',
+    titulo: 'Rescate exitoso: 12 cachorros encuentran hogar',
+    resumen: 'Gracias al trabajo de nuestros voluntarios, 12 cachorros que fueron encontrados abandonados en el sector de Azapa ya tienen familias adoptivas. Un logro que nos llena de alegría.',
+    contenido: 'Hace tres semanas, un grupo de 12 cachorros fue encontrado abandonado en una caja en el sector de Azapa. Estaban deshidratados y con signos de desnutrición. Gracias a la rápida acción de nuestros voluntarios, todos lograron recuperarse por completo.\n\nHoy nos llena de alegría contar que los 12 cachorros ya fueron adoptados por familias responsables de la región.',
+    categoria: 'Rescate',
+    imagen: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=600&h=400&fit=crop',
+    ubicacion: 'Arica',
+    created_date: '2025-03-05T10:00:00Z',
+  },
+  {
+    id: '4',
+    titulo: 'Nuevo convenio con clínica veterinaria regional',
+    resumen: 'Mundo Animalia firmó un convenio de colaboración con la Clínica Veterinaria del Norte, que permitirá atención preferencial y descuentos en tratamientos para los animales rescatados por la plataforma.',
+    contenido: 'Mundo Animalia firmó un importante convenio de colaboración con la Clínica Veterinaria del Norte. Este acuerdo permitirá atención preferencial y descuentos significativos en tratamientos, cirugías y exámenes para todos los animales rescatados a través de la plataforma.\n\nEl convenio también contempla jornadas de capacitación para nuestros voluntarios y acceso a atención de urgencia en horario extendido.',
+    categoria: 'Institucional',
+    imagen: 'https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?w=600&h=400&fit=crop',
+    ubicacion: 'Arica',
+    created_date: '2025-02-28T10:00:00Z',
+  },
+  {
+    id: '5',
+    titulo: 'Taller de primeros auxilios para mascotas',
+    resumen: 'Se realizará un taller abierto a la comunidad sobre primeros auxilios básicos para mascotas. Aprende cómo actuar ante emergencias mientras llegas al veterinario.',
+    contenido: 'Se realizará un taller gratuito y abierto a toda la comunidad sobre primeros auxilios básicos para mascotas. Aprenderás cómo actuar ante emergencias comunes —heridas, atragantamientos, golpes de calor o intoxicaciones— mientras trasladas a tu mascota al veterinario.\n\nEl taller será dictado por médicos veterinarios y contará con demostraciones prácticas.',
+    categoria: 'Evento',
+    imagen: 'https://images.unsplash.com/photo-1587764379873-97837921fd44?w=600&h=400&fit=crop',
+    ubicacion: 'Arica',
+    created_date: '2025-02-20T10:00:00Z',
+  },
+  {
+    id: '6',
+    titulo: 'Voluntarios de Camarones se suman a la causa',
+    resumen: 'Un grupo de 15 vecinos de Camarones se organizó como voluntarios de Mundo Animalia para cubrir las necesidades de animales abandonados en la zona rural de la región.',
+    contenido: 'Un grupo de 15 vecinos de Camarones se organizó como voluntarios de Mundo Animalia para atender las necesidades de los animales abandonados en la zona rural de la región. Esta nueva red permitirá llegar a lugares donde antes era difícil brindar ayuda.\n\nLos voluntarios recibieron capacitación en rescate, primeros auxilios y manejo responsable de animales.',
+    categoria: 'Comunidad',
+    imagen: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=600&h=400&fit=crop',
+    ubicacion: 'Camarones',
+    created_date: '2025-02-10T10:00:00Z',
+  },
+];
+
 // In-memory store
 const store = {
   Animal: [...mockAnimals],
   AdoptionRequest: [...mockAdoptionRequests],
   User: [...mockUsers],
+  Noticia: [...mockNoticias],
 };
 
 // Generic CRUD operations for mock entities
@@ -318,6 +382,7 @@ export const base44 = {
     Animal: createEntityApi('Animal'),
     AdoptionRequest: createEntityApi('AdoptionRequest'),
     User: createEntityApi('User'),
+    Noticia: createEntityApi('Noticia'),
   },
   auth: {
     isAuthenticated: () => Promise.resolve(true),

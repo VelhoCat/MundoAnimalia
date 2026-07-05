@@ -5,6 +5,7 @@ import { Shield } from 'lucide-react';
 import AdminAnimals from '../components/admin/AdminAnimals';
 import AdminRequests from '../components/admin/AdminRequests';
 import AdminUsers from '../components/admin/AdminUsers';
+import AdminNews from '../components/admin/AdminNews';
 
 export default function AdminDashboard() {
   const { user } = useOutletContext();
@@ -35,11 +36,13 @@ export default function AdminDashboard() {
           <TabsList className="bg-muted rounded-xl p-1">
             <TabsTrigger value="animals" className="rounded-lg">Animales</TabsTrigger>
             <TabsTrigger value="requests" className="rounded-lg">Solicitudes</TabsTrigger>
+            <TabsTrigger value="news" className="rounded-lg">Noticias</TabsTrigger>
             <TabsTrigger value="users" className="rounded-lg">Usuarios</TabsTrigger>
           </TabsList>
 
           <TabsContent value="animals"><AdminAnimals /></TabsContent>
           <TabsContent value="requests"><AdminRequests /></TabsContent>
+          <TabsContent value="news"><AdminNews user={user} /></TabsContent>
           <TabsContent value="users"><AdminUsers /></TabsContent>
         </Tabs>
       </div>

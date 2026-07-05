@@ -7,11 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, Heart } from 'lucide-react';
+import { Loader2, Heart, CheckCircle2 } from 'lucide-react';
+import CareRecommendations from './CareRecommendations';
 
 export default function AdoptionForm({ animal, user, onSuccess }) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     animal_id: animal.id,
     animal_nombre: animal.nombre,
@@ -35,8 +37,34 @@ export default function AdoptionForm({ animal, user, onSuccess }) {
       description: `Tu solicitud para adoptar a ${animal.nombre} ha sido registrada. Te contactaremos pronto.`,
     });
     setLoading(false);
-    onSuccess();
+    setSubmitted(true);
   };
+
+  if (submitted) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+            <CheckCircle2 className="w-7 h-7" />
+          </div>
+          <h3 className="font-heading font-bold text-xl">¡Solicitud enviada!</h3>
+          <p className="text-sm text-muted-foreground">
+            Tu solicitud para adoptar a {animal.nombre} fue registrada y te contactaremos pronto.
+            Mientras tanto, revisa estos cuidados pensados para {animal.nombre}.
+          </p>
+        </div>
+
+        <CareRecommendations animal={animal} />
+
+        <Button
+          onClick={onSuccess}
+          className="w-full bg-secondary hover:bg-secondary/90 rounded-full h-12 font-heading font-semibold"
+        >
+          Entendido
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
