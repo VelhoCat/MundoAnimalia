@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Bell, Heart, MessageCircle, Check } from 'lucide-react';
+import { Bell, Heart, MessageCircle, Check, X, Trash2 } from 'lucide-react';
 
 function tiempoRelativo(fecha) {
   const d = new Date(fecha);
@@ -38,14 +38,23 @@ export default function NotificationsBell({ user }) {
     refetchOnWindowFocus: true,
   });
 
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ['notifications'] });
+
   const markAll = useMutation({
     mutationFn: () => base44.social.notifications.markAllRead(),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications'] }),
+    onSuccess: invalidate,
   });
-
   const markOne = useMutation({
     mutationFn: (id) => base44.social.notifications.markRead(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications'] }),
+    onSuccess: invalidate,
+  });
+  const deleteOne = useMutation({
+    mutationFn: (id) => base44.social.notifications.delete(id),
+    onSuccess: invalidate,
+  });
+  const clearAll = useMutation({
+    mutationFn: () => base44.social.notifications.clearAll(),
+    onSuccess: invalidate,
   });
 
   if (!user) return null;
@@ -73,14 +82,24 @@ export default function NotificationsBell({ user }) {
       <DropdownMenuContent align="end" className="w-80 p-0">
         <div className="flex items-center justify-between px-4 py-2.5 border-b">
           <span className="font-heading font-semibold text-sm">Notificaciones</span>
-          {unread > 0 && (
-            <button
-              onClick={() => markAll.mutate()}
-              className="text-xs text-primary hover:underline flex items-center gap-1"
-            >
-              <Check className="w-3 h-3" /> Marcar leídas
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {unread > 0 && (
+              <button
+                onClick={() => markAll.mutate()}
+                className="text-xs text-primary hover:underline flex items-center gap-1"
+              >
+                <Check className="w-3 h-3" /> Marcar leídas
+              </button>
+            )}
+            {items.length > 0 && (
+              <button
+                onClick={() => clearAll.mutate()}
+                className="text-xs text-muted-foreground hover:text-destructive flex items-center gap-1"
+              >
+                <Trash2 className="w-3 h-3" /> Borrar todas
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="max-h-96 overflow-y-auto">
@@ -93,22 +112,33 @@ export default function NotificationsBell({ user }) {
             items.map((n) => {
               const Icono = iconoPorTipo[n.tipo] || Bell;
               return (
-                <button
+                <div
                   key={n.id}
-                  onClick={() => handleClick(n)}
-                  className={`w-full text-left flex gap-3 px-4 py-3 border-b last:border-0 hover:bg-muted/50 transition-colors ${
+                  className={`group flex gap-3 px-4 py-3 border-b last:border-0 hover:bg-muted/50 transition-colors ${
                     !n.leida ? 'bg-primary/5' : ''
                   }`}
                 >
-                  <div className="w-8 h-8 shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                    <Icono className="w-4 h-4" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm leading-snug">{n.mensaje}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{tiempoRelativo(n.created_date)}</p>
-                  </div>
-                  {!n.leida && <span className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0" />}
-                </button>
+                  <button
+                    onClick={() => handleClick(n)}
+                    className="flex gap-3 flex-1 min-w-0 text-left"
+                  >
+                    <div className="w-8 h-8 shrink-0 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                      <Icono className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm leading-snug">{n.mensaje}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{tiempoRelativo(n.created_date)}</p>
+                    </div>
+                    {!n.leida && <span className="w-2 h-2 rounded-full bg-primary mt-1.5 shrink-0" />}
+                  </button>
+                  <button
+                    onClick={() => deleteOne.mutate(n.id)}
+                    aria-label="Eliminar notificación"
+                    className="shrink-0 self-start p-1 rounded-full text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               );
             })
           )}

@@ -14,6 +14,24 @@ function require_user() {
     return $user;
 }
 
+// Igual que require_user, pero además corta con 403 si la cuenta está baneada.
+function require_not_banned() {
+    $user = require_user();
+    if ((int) ($user['baneado'] ?? 0) === 1) {
+        json_response(['error' => 'Tu cuenta está suspendida: no puedes publicar ni comentar.'], 403);
+    }
+    return $user;
+}
+
+// Corta con 403 si el usuario actual no es administrador.
+function require_admin() {
+    $user = require_user();
+    if (($user['role'] ?? '') !== 'admin') {
+        json_response(['error' => 'Solo los administradores pueden realizar esta acción.'], 403);
+    }
+    return $user;
+}
+
 // --- Estrellas ---------------------------------------------------------------
 // 1 estrella desde 1 animal, 2 desde 3, 3 desde 5, 4 desde 10, 5 desde 20.
 function stars_for_count($n) {
@@ -137,7 +155,7 @@ function handle_likes($animalId, $method) {
 // POST /animals/{id}/comments  -> crear (login) { texto }
 function handle_comments($animalId, $method) {
     if ($method === 'POST') {
-        $user = require_user();
+        $user = require_not_banned();
         $body = read_json_body();
         $texto = trim($body['texto'] ?? '');
         if ($texto === '') {
@@ -215,6 +233,19 @@ function handle_comment($commentId, $method) {
 // POST /notifications/{id}/read -> marca una como leída
 function handle_notifications($segments, $method) {
     $user = require_user();
+
+    // Eliminar notificaciones (una o todas las del usuario)
+    if ($method === 'DELETE') {
+        $id = $segments[1] ?? null;
+        if ($id === null || $id === '') {
+            $del = db()->prepare('DELETE FROM notifications WHERE user_email = ?');
+            $del->execute([$user['email']]);
+        } else {
+            $del = db()->prepare('DELETE FROM notifications WHERE id = ? AND user_email = ?');
+            $del->execute([$id, $user['email']]);
+        }
+        json_response(['success' => true]);
+    }
 
     // Marcar como leídas
     if ($method === 'POST') {

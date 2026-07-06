@@ -16,6 +16,11 @@ CREATE DATABASE IF NOT EXISTS mundo_animalia
 USE mundo_animalia;
 
 -- Limpieza (orden inverso por llaves foráneas)
+-- Primero las tablas que dependen de animals (likes/comments de las
+-- funciones sociales), para que el DROP de animals no falle por FK (#1451).
+DROP TABLE IF EXISTS likes;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS adoption_requests;
 DROP TABLE IF EXISTS animals;
 DROP TABLE IF EXISTS users;
@@ -29,6 +34,7 @@ CREATE TABLE users (
   email         VARCHAR(190) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   role          ENUM('admin','voluntario','adoptante') NOT NULL DEFAULT 'adoptante',
+  baneado       TINYINT(1) NOT NULL DEFAULT 0,
   created_date  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

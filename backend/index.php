@@ -90,6 +90,16 @@ if (isset($registry[$name])) {
         require_animal_edit_permission($id);
     }
 
+    // Permisos: modificar/eliminar usuarios (roles, baneo) solo un admin.
+    if ($name === 'users' && in_array($method, ['PUT', 'PATCH', 'DELETE'], true)) {
+        require_admin();
+    }
+
+    // Publicar un animal requiere una cuenta activa (no baneada).
+    if ($name === 'animals' && $method === 'POST') {
+        require_not_banned();
+    }
+
     switch ($method) {
         case 'GET':
             if ($id !== null) {

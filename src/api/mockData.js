@@ -388,6 +388,8 @@ export const base44 = {
         list: () => Promise.resolve({ items: [], unread: 0 }),
         markAllRead: () => Promise.resolve({ success: true }),
         markRead: () => Promise.resolve({ success: true }),
+        delete: () => Promise.resolve({ success: true }),
+        clearAll: () => Promise.resolve({ success: true }),
       },
       userStats: () => Promise.resolve({
         given_count: 0, adopted_count: 0, given_stars: 0, adopted_stars: 0,

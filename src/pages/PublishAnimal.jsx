@@ -67,18 +67,27 @@ export default function PublishAnimal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    if (editId) {
-      await base44.entities.Animal.update(editId, form);
-      toast({ title: 'Animal actualizado', description: `${form.nombre} ha sido actualizado exitosamente.` });
-    } else {
-      // Registrar quién publica el animal (identificador = email/usuario)
-      await base44.entities.Animal.create({ ...form, publicado_por: user.email });
-      toast({ title: '¡Animal publicado!', description: `${form.nombre} ya está visible en el catálogo.` });
+    try {
+      if (editId) {
+        await base44.entities.Animal.update(editId, form);
+        toast({ title: 'Animal actualizado', description: `${form.nombre} ha sido actualizado exitosamente.` });
+      } else {
+        // Registrar quién publica el animal (identificador = email/usuario)
+        await base44.entities.Animal.create({ ...form, publicado_por: user.email });
+        toast({ title: '¡Animal publicado!', description: `${form.nombre} ya está visible en el catálogo.` });
+      }
+      queryClient.invalidateQueries({ queryKey: ['animals'] });
+      queryClient.invalidateQueries({ queryKey: ['featured-animals'] });
+      navigate('/catalogo');
+    } catch (err) {
+      toast({
+        title: 'No se pudo guardar',
+        description: err?.message || 'Inténtalo nuevamente.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
-    queryClient.invalidateQueries({ queryKey: ['animals'] });
-    queryClient.invalidateQueries({ queryKey: ['featured-animals'] });
-    setLoading(false);
-    navigate('/catalogo');
   };
 
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
