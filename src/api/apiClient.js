@@ -137,6 +137,8 @@ export const base44 = {
       list: () => request('/notifications'),
       markAllRead: () => request('/notifications/read', { method: 'POST' }),
       markRead: (id) => request(`/notifications/${id}/read`, { method: 'POST' }),
+      delete: (id) => request(`/notifications/${id}`, { method: 'DELETE' }),
+      clearAll: () => request('/notifications', { method: 'DELETE' }),
     },
     userStats: (email) =>
       request(`/user-stats${email ? `?email=${encodeURIComponent(email)}` : ''}`),

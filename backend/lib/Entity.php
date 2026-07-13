@@ -175,8 +175,8 @@ function entity_registry() {
         ),
         'users' => new Entity(
             'users',
-            ['full_name','email','role'],
-            [],
+            ['full_name','email','role','baneado'],
+            ['baneado'],
             []
         ),
         'noticias' => new Entity(
