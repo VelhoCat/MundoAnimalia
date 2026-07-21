@@ -100,6 +100,9 @@ export const base44 = {
       request('/auth/login', { method: 'POST', body: { email, password } }),
     register: (payload) =>
       request('/auth/register', { method: 'POST', body: payload }),
+    // Editar el perfil propio: { full_name?, password_actual?, password_nueva? }
+    updateProfile: (payload) =>
+      request('/auth/profile', { method: 'PUT', body: payload }),
     logout: async (redirectUrl) => {
       try { await request('/auth/logout', { method: 'POST' }); } catch { /* ignora */ }
       if (redirectUrl) window.location.href = redirectUrl;

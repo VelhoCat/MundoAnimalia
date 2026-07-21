@@ -53,6 +53,19 @@ export default function PublishAnimal() {
     );
   }
 
+  // Cuenta suspendida: no puede publicar ni editar publicaciones.
+  if (user.baneado) {
+    return (
+      <div className="pt-24 pb-16 px-4 text-center">
+        <h2 className="font-heading font-bold text-2xl mb-2">Cuenta suspendida</h2>
+        <p className="text-muted-foreground">
+          Tu cuenta está suspendida, así que no puedes publicar ni editar publicaciones.
+          Contacta a un administrador si crees que es un error.
+        </p>
+      </div>
+    );
+  }
+
   if (!form) return null;
 
   const handleFileUpload = async (e) => {

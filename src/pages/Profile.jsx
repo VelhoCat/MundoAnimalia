@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
 import { PawPrint, Pencil, Trash2, Plus, User as UserIcon, Loader2 } from 'lucide-react';
 import UserStars from '@/components/social/UserStars';
+import EditProfileDialog from '@/components/profile/EditProfileDialog';
 
 const estadoLabels = {
   disponible: { label: 'Disponible', className: 'bg-primary text-primary-foreground' },
@@ -67,15 +68,21 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto">
         {/* Cabecera del usuario */}
         <div className="flex items-center gap-4 mb-10">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-heading font-bold">
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center text-2xl font-heading font-bold shrink-0">
             {user.full_name?.charAt(0)?.toUpperCase() || <UserIcon className="w-7 h-7" />}
           </div>
-          <div>
+          <div className="min-w-0">
             <h1 className="font-heading font-bold text-2xl sm:text-3xl">{user.full_name}</h1>
-            <div className="flex items-center gap-2 mt-1 text-muted-foreground text-sm">
-              <span>{user.email}</span>
+            <div className="flex flex-wrap items-center gap-2 mt-1 text-muted-foreground text-sm">
+              <span className="truncate">{user.email}</span>
               <Badge variant="outline" className="capitalize">{user.role || 'adoptante'}</Badge>
+              {user.baneado && (
+                <Badge variant="outline" className="text-destructive border-destructive/40">Suspendida</Badge>
+              )}
             </div>
+          </div>
+          <div className="ml-auto shrink-0">
+            <EditProfileDialog user={user} />
           </div>
         </div>
 

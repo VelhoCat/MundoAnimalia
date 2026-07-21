@@ -185,8 +185,13 @@ export default function AnimalDetail() {
               </div>
             )}
 
-            {/* Adopt button */}
-            {animal.estado_adopcion === 'disponible' && (
+            {/* Adopt button — bloqueado si la cuenta está suspendida */}
+            {animal.estado_adopcion === 'disponible' && user?.baneado && (
+              <div className="rounded-xl bg-destructive/10 text-destructive px-4 py-3 text-sm">
+                Tu cuenta está suspendida: no puedes enviar solicitudes de adopción.
+              </div>
+            )}
+            {animal.estado_adopcion === 'disponible' && !user?.baneado && (
               <Dialog open={adoptOpen} onOpenChange={setAdoptOpen}>
                 <DialogTrigger asChild>
                   <Button

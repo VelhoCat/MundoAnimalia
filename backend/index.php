@@ -45,6 +45,7 @@ if ($segments[0] === 'auth') {
     if ($action === 'login' && $method === 'POST')    handle_login();
     if ($action === 'logout' && $method === 'POST')   handle_logout();
     if ($action === 'register' && $method === 'POST') handle_register();
+    if ($action === 'profile' && in_array($method, ['PUT', 'POST'], true)) handle_update_profile();
     json_response(['error' => 'Ruta de auth no encontrada.'], 404);
 }
 
@@ -103,8 +104,16 @@ if (isset($registry[$name])) {
         require_admin();
     }
 
-    // Publicar un animal requiere una cuenta activa (no baneada).
+    // --- Cuenta suspendida (baneada): bloqueo completo de acciones ---
+    // Puede navegar y ver, pero no publicar, ni editar publicaciones,
+    // ni enviar solicitudes de adopción. (Comentar se bloquea en social.php)
     if ($name === 'animals' && $method === 'POST') {
+        require_not_banned();
+    }
+    if ($name === 'animals' && $id !== null && in_array($method, ['PUT', 'PATCH'], true)) {
+        require_not_banned();
+    }
+    if ($name === 'adoption-requests' && $method === 'POST') {
         require_not_banned();
     }
 

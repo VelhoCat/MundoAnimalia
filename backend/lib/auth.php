@@ -26,7 +26,9 @@ function current_user() {
     $stmt = db()->prepare('SELECT * FROM users WHERE id = ?');
     $stmt->execute([$_SESSION['user_id']]);
     $row = $stmt->fetch();
-    return normalize_row($row ?: null);
+    // 'baneado' se normaliza como booleano real: si viniera como texto "0",
+    // en JavaScript sería "verdadero" y marcaría suspendido a todo el mundo.
+    return normalize_row($row ?: null, ['baneado']);
 }
 
 // POST /auth/login  { email, password }
@@ -52,7 +54,50 @@ function handle_login() {
     session_regenerate_id(true);
     $_SESSION['user_id'] = (int) $row['id'];
 
-    json_response(normalize_row($row));
+    json_response(normalize_row($row, ['baneado']));
+}
+
+// PUT /auth/profile  { full_name?, password_actual?, password_nueva? }
+// El propio usuario edita su nombre y/o su contraseña.
+function handle_update_profile() {
+    $user = current_user();
+    if (!$user) {
+        json_response(['error' => 'Debes iniciar sesión.'], 401);
+    }
+    $body = read_json_body();
+    $nombre     = trim($body['full_name'] ?? '');
+    $actual     = $body['password_actual'] ?? '';
+    $nueva      = $body['password_nueva'] ?? '';
+
+    if ($nombre === '' && $nueva === '') {
+        json_response(['error' => 'No hay cambios que guardar.'], 400);
+    }
+
+    // Cambio de nombre
+    if ($nombre !== '') {
+        $stmt = db()->prepare('UPDATE users SET full_name = ? WHERE id = ?');
+        $stmt->execute([$nombre, $user['id']]);
+    }
+
+    // Cambio de contraseña: exige la contraseña actual correcta
+    if ($nueva !== '') {
+        if (strlen($nueva) < 6) {
+            json_response(['error' => 'La nueva contraseña debe tener al menos 6 caracteres.'], 400);
+        }
+        $stmt = db()->prepare('SELECT password_hash FROM users WHERE id = ?');
+        $stmt->execute([$user['id']]);
+        $row = $stmt->fetch();
+        if (!$row || !password_verify($actual, $row['password_hash'])) {
+            json_response(['error' => 'La contraseña actual no es correcta.'], 403);
+        }
+        $hash = password_hash($nueva, PASSWORD_DEFAULT);
+        $stmt = db()->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
+        $stmt->execute([$hash, $user['id']]);
+    }
+
+    $stmt = db()->prepare('SELECT * FROM users WHERE id = ?');
+    $stmt->execute([$user['id']]);
+    json_response(normalize_row($stmt->fetch(), ['baneado']));
 }
 
 // GET /auth/me
@@ -111,5 +156,5 @@ function handle_register() {
 
     $stmt = db()->prepare('SELECT * FROM users WHERE id = ?');
     $stmt->execute([$id]);
-    json_response(normalize_row($stmt->fetch()), 201);
+    json_response(normalize_row($stmt->fetch(), ['baneado']), 201);
 }

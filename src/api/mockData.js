@@ -387,6 +387,10 @@ export const base44 = {
   auth: {
     isAuthenticated: () => Promise.resolve(true),
     me: () => Promise.resolve(store.User[0]), // Returns admin user by default
+    updateProfile: (payload) => {
+      if (payload?.full_name) store.User[0].full_name = payload.full_name;
+      return Promise.resolve(store.User[0]);
+    },
     logout: (redirectUrl) => {
       if (redirectUrl) window.location.href = redirectUrl;
     },

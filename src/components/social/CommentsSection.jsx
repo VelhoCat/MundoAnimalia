@@ -75,7 +75,11 @@ export default function CommentsSection({ animalId, user }) {
       </div>
 
       {/* Formulario para comentar */}
-      {user ? (
+      {user?.baneado ? (
+        <p className="text-sm text-destructive bg-destructive/10 rounded-xl px-4 py-3 mb-6">
+          Tu cuenta está suspendida: no puedes comentar.
+        </p>
+      ) : user ? (
         <form onSubmit={handleSubmit} className="mb-6">
           <Textarea
             value={texto}
